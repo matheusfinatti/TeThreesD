@@ -73,7 +73,7 @@ Tetris.init = function() {
     Tetris.stats.domElement.style.left = '10px';
     document.body.appendChild(Tetris.stats.domElement);
 
-    document.getElementById('play_button'.addEventListener('click', function(event){
+    document.getElementById('play_button').addEventListener('click', function(event){
         event.preventDefault();
         Tetris.start();
     });
@@ -113,6 +113,43 @@ Tetris.animate = function() {
 
     if(!Tetris.gameOver)
         window.requestAnimationFrame(Tetris.animate);
-}
+};
+
+Tetris.staticBlocks = [];
+Tetris.colors = [0x00ffff, 0xff0000, 0x00ff00, 0xffff00, 0xff00ff, 0x0000ff, 0xff5500]
+
+/* Add Piece global ?
+ * with its own color and shape ?
+ * Keep track of pieces ?
+ */
+
+Tetris.addStaticBlock = function(x,y,z) {
+    /* Adds a static block to (X,Y) position and P plane */
+    if(Tetris.staticBlocks[x] === undefined)
+        Tetris.staticBlocks[x] = [];
+    if(Tetris.staticBlocks[x][y] === undefined)
+        Tetris.staticBlocks[x][y] = [];
+
+    var mesh = THREE.SceneUtils.createMultiMaterialObject(new THREE.CubeGeometry(
+        Tetris.blockSize, Tetris.blockSize, Tetris.blockSize),
+            [new THREE.MeshBasicMaterial({color: 0x000000, shading: THREE.FlatShading, wireframe: true, transparent: true}),
+            new THREE.MeshBasicMaterial({color: Tetris.colors[z]})]);
+
+    mesh.position.x = (x - Tetris.boundingBoxConfig.splitX/2) * Tetris.blockSize + Tetris.blockSize/2;
+    mesh.position.y = (y - Tetris.boundingBoxConfig.splitY/2) * Tetris.blockSize + Tetris.blockSize/2;
+    mesh.position.z = (z - Tetris.boundingBoxConfig.splitZ/2) * Tetris.blockSize + Tetris.blockSize/2;
+
+    mesh.overdraw = true;
+
+    Tetris.scene.add(mesh);
+    Tetris.staticBlocks[x][y][z] = mesh;
+};
+
+/* Function to keep score */
+Tetris.currentPoints = 0;
+Tetris.addPoints = function(n) {
+    Tetris.currentPoints += n;
+    Tetris.pointsDOM.innerHTML = Tetris.currentPoints;
+};
 
 window.addEventListener("load", Tetris.init);
