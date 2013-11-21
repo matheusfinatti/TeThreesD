@@ -20,7 +20,7 @@ Tetris.init = function() {
     var height = window.innerHeight - 100;
 
     /* Camera attributes */
-    var viewAngle = 45;
+    var viewAngle = 30;
     var aspect = width/height;
     var near = 0.1;
     var far = 10000;
@@ -42,12 +42,12 @@ Tetris.init = function() {
 
     /* Configuration object */
     var boundingBoxConfig = {
-        width: 360,
-        height: 360,
-        depth: 1200,
-        splitX: 6,
-        splitY: 6,
-        splitZ: 20
+        width: 100,
+        height: 220,
+        depth: 20,
+        splitX: 10,
+        splitY: 22,
+        splitZ: 0
     };
 
     Tetris.boundingBoxConfig = boundingBoxConfig;
@@ -58,10 +58,52 @@ Tetris.init = function() {
             boundingBoxConfig.width, boundingBoxConfig.height, boundingBoxConfig.depth,
             boundingBoxConfig.splitX, boundingBoxConfig.splitY, boundingBoxConfig.splitZ
         ),
-        new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true, })
+        new THREE.MeshBasicMaterial({color: 0x666666, wireframe: true})
     );
 
+    var boundingBox2 = new THREE.Mesh(
+        new THREE.CubeGeometry(
+            boundingBoxConfig.width, boundingBoxConfig.height, boundingBoxConfig.depth-10,
+            boundingBoxConfig.splitX, boundingBoxConfig.splitY, boundingBoxConfig.splitZ
+        ),
+            new THREE.MeshBasicMaterial({color: 0x222222, wireframe: true})
+    );
+
+
+    /* Move the second boundingbox */
+    boundingBox2.position.x = boundingBoxConfig.width/2 + boundingBoxConfig.depth/4;
+    boundingBox2.position.z = -boundingBoxConfig.width/2 - boundingBoxConfig.depth/4;
+    boundingBox2.rotation.y = 1.57;
+
+    var boundingBox3 = new THREE.Mesh(
+        new THREE.CubeGeometry(
+            boundingBoxConfig.width, boundingBoxConfig.height, boundingBoxConfig.depth-10,
+            boundingBoxConfig.splitX, boundingBoxConfig.splitY, boundingBoxConfig.splitZ
+        ),
+            new THREE.MeshBasicMaterial({color: 0x222222, wireframe: true})
+    );
+
+    /* Move the third boundingbox */
+    boundingBox3.position.x = -boundingBoxConfig.width/2 - boundingBoxConfig.depth/4;
+    boundingBox3.position.z = -boundingBoxConfig.width/2 - boundingBoxConfig.depth/4;
+    boundingBox3.rotation.y = 1.57;
+
+    var boundingBox4 = new THREE.Mesh(
+        new THREE.CubeGeometry(
+            boundingBoxConfig.width, boundingBoxConfig.height, boundingBoxConfig.depth,
+            boundingBoxConfig.splitX, boundingBoxConfig.splitY, boundingBoxConfig.splitZ
+        ),
+            new THREE.MeshBasicMaterial({color: 0x222222, wireframe: true})
+    );
+
+    /* Move the fourth boundingbox */
+    boundingBox4.position.z = -boundingBoxConfig.width - boundingBoxConfig.width/2;
+
+    /* Add all the boundingboxes to the scene */
     Tetris.scene.add(boundingBox);
+    Tetris.scene.add(boundingBox2);
+    Tetris.scene.add(boundingBox3);
+    Tetris.scene.add(boundingBox4);
 
     /* First render */
     Tetris.renderer.render(Tetris.scene, Tetris.camera);
@@ -85,6 +127,7 @@ Tetris.start = function() {
     document.getElementById('menu').style.display = "none";
     Tetris.pointsDOM = document.getElementById('points');
     Tetris.pointsDOM.style.display = "block";
+    Tetris.Block.generate();
 
     Tetris.animate();
 }
@@ -106,6 +149,7 @@ Tetris.animate = function() {
     while(Tetris.cumulatedFrameTime > Tetris.gameStepTime) {
         /* Block movement goes here */
         Tetris.cumulatedFrameTime -= Tetris.gameStepTime;
+        Tetris.Block.move(0, -1, 0);
     }
 
     Tetris.renderer.render(Tetris.scene, Tetris.camera);
@@ -153,3 +197,28 @@ Tetris.addPoints = function(n) {
 };
 
 window.addEventListener("load", Tetris.init);
+
+window.addEventListener('keydown', function(event){
+    var key = event.which ? event.which : event.keyCode;
+
+    switch(key){
+        case 38: // up arrow
+            Tetris.Block.move(0, 1, 0);
+            break;
+        case 40: // down arrow
+            Tetris.Block.move(0, -1, 0);
+            break;
+        case 37: // left arrow
+            Tetris.Block.move(-1, 0, 0);
+            break;
+        case 39: // right arrow
+            Tetris.Block.move(1, 0, 0);
+            break;
+        case 88: // x
+            Tetris.Block.move(90, 0, 0);
+            break;
+        case 90: // z
+            Tetris.Block.move(-90, 0, 0);
+            break;
+    }
+}, false);
