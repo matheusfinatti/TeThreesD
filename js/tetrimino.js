@@ -65,8 +65,8 @@ Tetris.Block.generate = function() {
     Tetris.scene.add(Tetris.Block.mesh);
 };
 
-Tetris.Block.rotate = function(x) {
-    Tetris.Block.mesh.rotation.x += x * Math.PI / 180;
+Tetris.Block.rotate = function(alpha) {
+    Tetris.Block.mesh.rotation.z += alpha * Math.PI / 180;
 };
 
 Tetris.Block.move = function(x,y) {

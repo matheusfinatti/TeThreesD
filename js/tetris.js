@@ -215,10 +215,10 @@ window.addEventListener('keydown', function(event){
             Tetris.Block.move(1, 0, 0);
             break;
         case 88: // x
-            Tetris.Block.move(90, 0, 0);
+            Tetris.Block.rotate(90);
             break;
         case 90: // z
-            Tetris.Block.move(-90, 0, 0);
+            Tetris.Block.rotate(-90);
             break;
     }
 }, false);
