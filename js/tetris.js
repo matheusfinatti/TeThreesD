@@ -201,7 +201,7 @@ Tetris.addStaticBlock = function(x,y,p) {
             new THREE.MeshBasicMaterial({color: Tetris.colors[0]})]);
 
     mesh.position.x = (x - Tetris.boundingBoxConfig.splitX/2) * Tetris.blockSize + Tetris.blockSize/2;
-    mesh.position.y = (22-y - Tetris.boundingBoxConfig.splitY/2) * Tetris.blockSize + Tetris.blockSize/2;
+    mesh.position.y = (y - Tetris.boundingBoxConfig.splitY/2) * Tetris.blockSize + Tetris.blockSize/2;
     mesh.position.z = 0;
 
     mesh.overdraw = true;

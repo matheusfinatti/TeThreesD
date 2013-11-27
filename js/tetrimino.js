@@ -15,7 +15,7 @@ Tetris.Block.shapes = [
     [   /* T */
         {x: 0, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
-        {x: 1, y: 1, z: 0},
+        {x: 1, y: -1, z: 0},
         {x: 2, y: 0, z: 0}
     ],
     [
@@ -55,7 +55,7 @@ Tetris.Block.generate = function() {
 
     /* Sets initial position */
     Tetris.Block.position = {x: 4,
-                             y: 0};
+                             y: 22};
 
     if(Tetris.Board.testCollision(true) === Tetris.Board.COLLISION.GROUND) {
         Tetris.gameOver = true;
@@ -102,9 +102,9 @@ Tetris.Block.move = function(x,y) {
     Tetris.Block.position.x += x;
 
     Tetris.Block.mesh.position.y -= y * Tetris.blockSize;
-    Tetris.Block.position.y += y;
+    Tetris.Block.position.y -= y;
 
-    var collision = Tetris.Board.testCollision((y != Tetris.boundingBoxConfig.height/6));
+    var collision = Tetris.Board.testCollision((y != 0));
     if(collision === Tetris.Board.COLLISION.WALL) {
         Tetris.Block.move(-x, 0);
     }
@@ -124,7 +124,7 @@ Tetris.Block.hitBottom = function() {
 Tetris.Block.petrify = function() {
     var shape = Tetris.Block.shape;
     for(var i = 0; i < shape.length; i++){
-        Tetris.addStaticBlock(Tetris.Block.position.x + shape[i].x, Tetris.Block.position.y + shape[i].y, Tetris.Board.currentField);
+        Tetris.addStaticBlock(Tetris.Block.position.x + shape[i].x, Tetris.Block.position.y + shape[i].y +1, Tetris.Board.currentField);
         Tetris.Board.fields[Tetris.Board.currentField][Tetris.Block.position.x + shape[i].x][Tetris.Block.position.y + shape[i].y] = Tetris.Board.FIELD.PETRIFIED;
     }
 };

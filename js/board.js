@@ -29,10 +29,6 @@ Tetris.Board.ground = 0;
 Tetris.Board.testCollision = function(ground_check) {
     var x,y,p,i;
 
-    Tetris.Board.leftMost = -Tetris.boundingBoxConfig.width/2 + Tetris.blockSize/2;
-    Tetris.Board.rightMost = Tetris.boundingBoxConfig.width/2 - Tetris.blockSize/2;
-    Tetris.Board.ground = -Tetris.boundingBoxConfig.height/2 + Tetris.blockSize/2;
-
     var fields = Tetris.Board.fields;
     var posx = Tetris.Block.position.x;
     var posy = Tetris.Block.position.y;
@@ -45,10 +41,10 @@ Tetris.Board.testCollision = function(ground_check) {
             return Tetris.Board.COLLISION.WALL;
 
 
-        if(fields[Tetris.Board.currentField][shape[i].x + posx][shape[i].y + posy] === Tetris.Board.FIELD.PETRIFIED)
+        if(fields[Tetris.Board.currentField][shape[i].x + posx][shape[i].y + posy -1] === Tetris.Board.FIELD.PETRIFIED)
             return ground_check ? Tetris.Board.COLLISION.GROUND : Tetris.Board.COLLISION.WALL;
 
-        if((shape[i].y + posy) >= fields[0][0].length) {
+        if((shape[i].y + posy) < 0) {
             return Tetris.Board.COLLISION.GROUND;
         }
     }
