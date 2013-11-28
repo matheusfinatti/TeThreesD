@@ -186,10 +186,26 @@ Tetris.addStaticBlock = function(x,y,p) {
             [new THREE.MeshBasicMaterial({color: 0x000000, shading: THREE.FlatShading, wireframe: true, transparent: true}),
             new THREE.MeshBasicMaterial({color: Tetris.Block.color})]);
 
-    mesh.position.x = (x - Tetris.boundingBoxConfig.splitX/2) * Tetris.blockSize + Tetris.blockSize/2;
-    mesh.position.y = (y - Tetris.boundingBoxConfig.splitY/2) * Tetris.blockSize + Tetris.blockSize/2;
-    mesh.position.z = 0;
+    switch(Tetris.Board.currentField){
+        case 0:
+            mesh.position.x = (x - Tetris.boundingBoxConfig.splitX/2) * Tetris.blockSize + Tetris.blockSize/2;
+            mesh.position.z = 0;
+            break;
+        case 1:
+            mesh.position.x = Tetris.Block.fieldOffset_x(x, 1);
+            mesh.position.z = -x * Tetris.blockSize - 15;
+            break;
+        case 2:
+            mesh.position.x = -x * Tetris.blockSize + 45;
+            mesh.position.z = -Tetris.boundingBoxConfig.width - 2*Tetris.boundingBoxConfig.depth;
+            break;
+        case 3:
+            mesh.position.x = Tetris.Block.fieldOffset_x(x, 3);
+            mesh.position.z = x * Tetris.blockSize - 105;
+            break;
+    }
 
+    mesh.position.y = (y - Tetris.boundingBoxConfig.splitY/2) * Tetris.blockSize + Tetris.blockSize/2;
     mesh.overdraw = true;
 
     Tetris.scene.add(mesh);

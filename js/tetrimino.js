@@ -104,11 +104,11 @@ Tetris.Block.generate = function() {
         //Tetris.sounds["gameover"].play();
     }
 
-    Tetris.Block.mesh.position.x = -Tetris.blockSize/2;
+    Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(3, Tetris.Board.currentField);
     Tetris.Block.mesh.position.y = Tetris.boundingBoxConfig.height/2 + Tetris.blockSize/2 ;
-    Tetris.Block.mesh.position.z = 0;
+    Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
     Tetris.Block.mesh.rotation.x = 0;
-    Tetris.Block.mesh.rotation.y = 0;
+    Tetris.Block.mesh.rotation.y = Tetris.Block.fieldRotate(Tetris.Board.currentField);
     Tetris.Block.mesh.rotation.z = 0;
     Tetris.Block.mesh.overdraw = true;
 
@@ -201,6 +201,19 @@ Tetris.Block.fieldOffset_z = function(x, f) {
             return -Tetris.boundingBoxConfig.width - 2 * Tetris.boundingBoxConfig.depth;
         case 3:
             return -x - Tetris.boundingBoxConfig.width/2 -11;
+    }
+}
+
+Tetris.Block.fieldRotate = function(f) {
+    switch(f){
+        case 0:
+            return 0;
+        case 2:
+            return 180 * Math.PI/180;
+        case 1:
+            return 90 * Math.PI/180;
+        case 3:
+            return -90 * Math.PI/180;
     }
 }
 

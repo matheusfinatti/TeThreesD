@@ -45,3 +45,12 @@ Tetris.Board.testCollision = function(ground_check) {
         }
     }
 };
+
+Tetris.Board.checkCompleted = function() {
+    var fields = Tetris.Board.fields;
+    var rebuild = false;
+
+    var sum;
+    var expected = fields[0].length * fields.length;
+    var bonus = 0;
+};
