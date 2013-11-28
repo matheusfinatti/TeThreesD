@@ -12,6 +12,34 @@ Tetris.Utils.roundVector = function(v) {
 
 Tetris.Block = {};
 Tetris.Block.shapes = [
+    [
+        /* I */
+        {x: 0, y: 0, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 2, y: 0, z: 0},
+        {x: 3, y: 0, z: 0}
+    ],
+    [
+        /* Z */
+        {x: 0, y: 0, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 1, y: -1, z: 0},
+        {x: 2, y: -1, z: 0}
+    ],
+    [
+        /* S */
+        {x: 1, y: 0, z: 0},
+        {x: 1, y: -1, z: 0},
+        {x: 0, y: -1, z: 0},
+        {x: 2, y: 0, z: 0},
+    ],
+    [
+        /* O */
+        {x: 0, y: 0, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 0, y: -1, z: 0},
+        {x: 1, y: -1, z: 0}
+    ],
     [   /* T */
         {x: 0, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
@@ -19,20 +47,33 @@ Tetris.Block.shapes = [
         {x: 2, y: 0, z: 0}
     ],
     [
-        /* I */
+        /* L */
+        {x: 0, y: 0, z: 0},
+        {x: 0, y: -1, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 2, y: 0, z: 0}
+    ],
+    [
+        /* J */
         {x: 0, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
         {x: 2, y: 0, z: 0},
-        {x: 3, y: 0, z: 0}
+        {x: 2, y: -1, z: 0}
     ]
 ];
 
 Tetris.Block.position = {};
+Tetris.Block.colors = [0x00ffff, 0xff0000, 0x00ff00, 0xffff00, 0xff00ff, 0xff5500, 0x0000ff];
+Tetris.Block.color = 0;
+Tetris.Block.hit = false;
 
 Tetris.Block.generate = function() {
     var geometry, tmpGeometry;
     var type = Math.floor(Math.random() * (Tetris.Block.shapes.length));
     this.blockType = type;
+    var colors = Tetris.Block.colors;
+    Tetris.Block.color = colors[type];
+
 
     Tetris.Block.shape = [];
     for(var i = 0; i < Tetris.Block.shapes[type].length; i++){
@@ -50,7 +91,7 @@ Tetris.Block.generate = function() {
 
     Tetris.Block.mesh = THREE.SceneUtils.createMultiMaterialObject(geometry, [
         new THREE.MeshBasicMaterial({color: 0x000000, shading: THREE.FlatShading, wireframe: true, transparent: true}),
-        new THREE.MeshBasicMaterial({color: 0xff0000})
+        new THREE.MeshBasicMaterial({color: colors[type]})
     ]);
 
     /* Sets initial position */
@@ -92,10 +133,6 @@ Tetris.Block.rotate = function(alpha) {
     }
 };
 
-Tetris.Block.normalizePosition = function(p) {
-    positions = [
-    ]
-}
 
 Tetris.Block.move = function(x,y) {
     Tetris.Block.mesh.position.x += x * Tetris.blockSize;
@@ -110,6 +147,7 @@ Tetris.Block.move = function(x,y) {
     }
 
     if(collision === Tetris.Board.COLLISION.GROUND) {
+        Tetris.Block.hit = true;
         Tetris.Block.hitBottom();
 //        Tetris.Board.checkCompleted();
     }

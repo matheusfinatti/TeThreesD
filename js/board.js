@@ -22,10 +22,6 @@ Tetris.Board.init = function(_x, _y, _p){
     }
 }
 
-Tetris.Board.leftMost = 0;
-Tetris.Board.rightMost = 0;
-Tetris.Board.ground = 0;
-
 Tetris.Board.testCollision = function(ground_check) {
     var x,y,p,i;
 

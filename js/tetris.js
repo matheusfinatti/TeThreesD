@@ -13,6 +13,7 @@ if(!window.requestAnimationFrame) {
 
 /* Main variable. All objects, functions and variables will be a member of Tetris */
 var Tetris = {};
+Tetris.swap = {};
 
 Tetris.init = function() {
     /* Scene size */
@@ -105,23 +106,17 @@ Tetris.init = function() {
     boundingBox4.position.z = -boundingBoxConfig.width - boundingBoxConfig.width/2;
 
     /* Add all the boundingboxes to the scene */
+    Tetris.box1 = boundingBox;
+    Tetris.box2 = boundingBox2;
+    Tetris.box3 = boundingBox3;
+    Tetris.box4 = boundingBox4;
     Tetris.scene.add(boundingBox);
     Tetris.scene.add(boundingBox2);
     Tetris.scene.add(boundingBox3);
     Tetris.scene.add(boundingBox4);
 
-    //TEST
-    var testBox = new THREE.Mesh(
-        new THREE.CubeGeometry(boundingBoxConfig.width/boundingBoxConfig.splitX, boundingBoxConfig.height/boundingBoxConfig.splitY, boundingBoxConfig.depth,
-                               0, 0, 0),
-        new THREE.MeshBasicMaterial({color: 0xda8fb9, wireframe: false})
-    );
-
-    testBox.position.x = -boundingBoxConfig.width/2+Tetris.blockSize/2;
-    testBox.position.z = 0;
-    testBox.position.y = -boundingBoxConfig.height/2 + Tetris.blockSize/2;
-
-    //Tetris.scene.add(testBox);
+    /* Game configuration */
+    Tetris.swap.swapped = false;
 
     /* First render */
     Tetris.renderer.render(Tetris.scene, Tetris.camera);
@@ -180,13 +175,13 @@ Tetris.animate = function() {
 Tetris.staticBlocks = [];
 for(var i = 0; i < 4; i++){
     Tetris.staticBlocks[i] = [];
+    for(var j = 0; j < 22; j++){
+        Tetris.staticBlocks[i][j] = [];
+        for(var k = 0; k < 10; k++)
+            Tetris.staticBlocks[i][j][k] = [];
+    }
 }
 Tetris.colors = [0x00ffff, 0xff0000, 0x00ff00, 0xffff00, 0xff00ff, 0x0000ff, 0xff5500]
-
-/* Add Piece global ?
- * with its own color and shape ?
- * Keep track of pieces ?
- */
 
 Tetris.addStaticBlock = function(x,y,p) {
     /* Adds a static block to (X,Y) position and P plane */
@@ -198,7 +193,7 @@ Tetris.addStaticBlock = function(x,y,p) {
     var mesh = THREE.SceneUtils.createMultiMaterialObject(new THREE.CubeGeometry(
         Tetris.blockSize, Tetris.blockSize, Tetris.blockSize),
             [new THREE.MeshBasicMaterial({color: 0x000000, shading: THREE.FlatShading, wireframe: true, transparent: true}),
-            new THREE.MeshBasicMaterial({color: Tetris.colors[0]})]);
+            new THREE.MeshBasicMaterial({color: Tetris.Block.color})]);
 
     mesh.position.x = (x - Tetris.boundingBoxConfig.splitX/2) * Tetris.blockSize + Tetris.blockSize/2;
     mesh.position.y = (y - Tetris.boundingBoxConfig.splitY/2) * Tetris.blockSize + Tetris.blockSize/2;
@@ -217,14 +212,38 @@ Tetris.addPoints = function(n) {
     Tetris.pointsDOM.innerHTML = Tetris.currentPoints;
 };
 
+Tetris.rotateBoard = function(direction){
+    var currField = Tetris.Board.currentField;
+    if(direction == -1){
+
+        //Rotate Tetriminos
+        for(var i = 0; i < Tetris.staticBlocks[currField].length; i++){
+            for(var j = 0; j < Tetris.staticBlocks[currField][i].length; j++){
+                if(Tetris.staticBlocks[currField][i][j].length <= 0)
+                    continue;
+                Tetris.staticBlocks[currField][i][j].position.x = Tetris.boundingBoxConfig.width/2 + Tetris.boundingBoxConfig.depth/4;
+                Tetris.staticBlocks[currField][i][j].position.z = -Tetris.staticBlocks[currField][i][j].position.x;
+            }
+        }
+
+        Tetris.Board.currentField += 1;
+    }
+}
+
 window.addEventListener("load", Tetris.init);
 
 window.addEventListener('keydown', function(event){
     var key = event.which ? event.which : event.keyCode;
 
     switch(key){
-        case 38: // up arrow
-            Tetris.Block.move(0, -1, 0);
+        case 32: // Space
+            for(var i = 0; i < 22; i++){
+                if(Tetris.Block.hit){
+                    Tetris.Block.hit = false;
+                    break;
+                }
+                Tetris.Block.move(0, 1, 0);
+            }
             break;
         case 40: // down arrow
             Tetris.Block.move(0, 1, 0);
@@ -240,6 +259,11 @@ window.addEventListener('keydown', function(event){
             break;
         case 90: // z
             Tetris.Block.rotate(-90);
+            break;
+        case 83:
+            Tetris.rotateBoard(-1);
+            break;
+        case 65:
             break;
     }
 }, false);
