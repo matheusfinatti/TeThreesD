@@ -14,8 +14,12 @@ if(!window.requestAnimationFrame) {
 /* Main variable. All objects, functions and variables will be a member of Tetris */
 var Tetris = {};
 Tetris.swap = {};
+Tetris.sounds = {};
 
 Tetris.init = function() {
+    /* Setup audio */
+    Tetris.sounds["theme"] = document.getElementById("audio_theme");
+
     /* Scene size */
     var width = window.innerWidth;
     var height = window.innerHeight - 100;
@@ -103,6 +107,7 @@ Tetris.init = function() {
     /* Game configuration */
     Tetris.swap.swapped = false;
 
+
     /* First render */
     Tetris.renderer.render(Tetris.scene, Tetris.camera);
 
@@ -121,6 +126,7 @@ Tetris.init = function() {
 
 
 Tetris.start = function() {
+    Tetris.sounds["theme"].play();
     /* Makes menu invisible */
     document.getElementById('menu').style.display = "none";
     Tetris.pointsDOM = document.getElementById('points');
@@ -205,8 +211,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = -Tetris.boundingBoxConfig.width/2 -Tetris.boundingBoxConfig.depth;
                 Tetris.camera.rotation.y = alpha * Math.PI/180;
                 Tetris.Board.currentField = 1;
-                Tetris.Block.mesh.position.z = Tetris.Block.position.x * -1 - Tetris.boundingBoxConfig.width/2 - 1;
-                Tetris.Block.mesh.position.x = Tetris.boundingBoxConfig.width/2 + Tetris.boundingBoxConfig.depth;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y = alpha * Math.PI/180;
                 Tetris.box1.material.color = new THREE.Color(0x222222);
                 Tetris.box2.material.color = new THREE.Color(0x888888);
@@ -216,8 +222,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = -Tetris.boundingBoxConfig.width/2 -Tetris.boundingBoxConfig.depth;
                 Tetris.camera.rotation.y = -3*alpha * Math.PI/180;
                 Tetris.Board.currentField = 3;
-                Tetris.Block.mesh.position.z = -Tetris.Block.position.x - Tetris.boundingBoxConfig.width/2 - 11;
-                Tetris.Block.mesh.position.x = -Tetris.boundingBoxConfig.width/2 - Tetris.boundingBoxConfig.depth;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y += alpha * Math.PI/180;
                 Tetris.box1.material.color = new THREE.Color(0x222222);
                 Tetris.box4.material.color = new THREE.Color(0x888888);
@@ -229,8 +235,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = -600 - Tetris.boundingBoxConfig.width - Tetris.boundingBoxConfig.depth*2;
                 Tetris.camera.rotation.y = 2*alpha * Math.PI/180;
                 Tetris.Board.currentField = 2;
-                Tetris.Block.mesh.position.x = Tetris.Block.position.x + 1;
-                Tetris.Block.mesh.position.z = -Tetris.boundingBoxConfig.width - 2*Tetris.boundingBoxConfig.depth;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y += alpha * Math.PI/180;
                 Tetris.box2.material.color = new THREE.Color(0x222222);
                 Tetris.box3.material.color = new THREE.Color(0x888888);
@@ -240,8 +246,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = 600;
                 Tetris.camera.rotation.y = 0;
                 Tetris.Board.currentField = 0;
-                Tetris.Block.mesh.position.x = -Tetris.Block.position.x - 1;
-                Tetris.Block.mesh.position.z = 0;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y = 0;
                 Tetris.box2.material.color = new THREE.Color(0x222222);
                 Tetris.box1.material.color = new THREE.Color(0x888888);
@@ -253,8 +259,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = -Tetris.boundingBoxConfig.width/2 -Tetris.boundingBoxConfig.depth;
                 Tetris.camera.rotation.y = 3*alpha * Math.PI/180;
                 Tetris.Board.currentField = 3;
-                Tetris.Block.mesh.position.z = -Tetris.Block.position.x - Tetris.boundingBoxConfig.width/2 - 11;
-                Tetris.Block.mesh.position.x = -Tetris.boundingBoxConfig.width/2 - Tetris.boundingBoxConfig.depth;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y += alpha * Math.PI/180;
                 Tetris.box3.material.color = new THREE.Color(0x222222);
                 Tetris.box4.material.color = new THREE.Color(0x888888);
@@ -264,8 +270,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = -Tetris.boundingBoxConfig.width/2 -Tetris.boundingBoxConfig.depth;
                 Tetris.camera.rotation.y = -alpha * Math.PI/180;
                 Tetris.Board.currentField = 1;
-                Tetris.Block.mesh.position.z = Tetris.Block.position.x * -1 - Tetris.boundingBoxConfig.width/2 - 1;
-                Tetris.Block.mesh.position.x = Tetris.boundingBoxConfig.width/2 + Tetris.boundingBoxConfig.depth;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y = -alpha * Math.PI/180;
                 Tetris.box3.material.color = new THREE.Color(0x222222);
                 Tetris.box2.material.color = new THREE.Color(0x888888);
@@ -277,7 +283,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = 600;
                 Tetris.camera.rotation.y = 0;
                 Tetris.Board.currentField = 0;
-                Tetris.Block.mesh.position.x = -Tetris.Block.position.x - 1;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.position.z = 0;
                 Tetris.Block.mesh.rotation.y = 0;
                 Tetris.box4.material.color = new THREE.Color(0x222222);
@@ -288,8 +295,8 @@ Tetris.rotateCamera = function(alpha){
                 Tetris.camera.position.z = -600 - Tetris.boundingBoxConfig.width - Tetris.boundingBoxConfig.depth*2;
                 Tetris.camera.rotation.y = 2*alpha * Math.PI/180;
                 Tetris.Board.currentField = 2;
-                Tetris.Block.mesh.position.x = Tetris.Block.position.x + 1;
-                Tetris.Block.mesh.position.z = -Tetris.boundingBoxConfig.width - 2*Tetris.boundingBoxConfig.depth;
+                Tetris.Block.mesh.position.x = Tetris.Block.fieldOffset_x(Tetris.Block.position.x, Tetris.Board.currentField);
+                Tetris.Block.mesh.position.z = Tetris.Block.fieldOffset_z(Tetris.Block.position.x, Tetris.Board.currentField);
                 Tetris.Block.mesh.rotation.y += alpha * Math.PI/180;
                 Tetris.box4.material.color = new THREE.Color(0x222222);
                 Tetris.box3.material.color = new THREE.Color(0x888888);

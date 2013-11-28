@@ -32,6 +32,7 @@
     </head>
 
     <body>
+      <audio id="audio_theme" src="music/Tetris.mp3" preload="auto"></audio>  
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		  <div class="container">
 		    <div class="navbar-header">
@@ -55,21 +56,26 @@
 
 		<div class="container">
             <!-- GAME GOES HERE -->
-            <div class="jumbotron" id="menu">
+            <div class="jumbotron" id="menu" style="position: absolute; top: 150px; z-index:2">
                 <h1>Menu</h1>
                 <p>
                 Movement: Arrows<br>
                 Rotation: Z X<br>
+                Rotate grid: A S<br>
                 Drop: Space<br>
-                Swap: C<br>
                 </p>
 
                 <a class="btn btn-lg btn-primary" href="#" role="button" id="play_button">Play</a>
             </div>
 
 
-            <div id="points">
+            <div class="jumbotron" id="points" style="position: absolute; top: 150px; z-index:1">
+                <h3>Points</h3>
                 0
+            </div>
+
+            <div class="jumbotron" id="debug" style="position: absolute; top: 350px; z-index:1 ">
+                <h2>Block</h2>
             </div>
     	</div><!-- /.container -->
     </body>

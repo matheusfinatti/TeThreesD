@@ -135,11 +135,30 @@ Tetris.Block.rotate = function(alpha) {
 
 
 Tetris.Block.move = function(x,y) {
-    Tetris.Block.mesh.position.x += x * Tetris.blockSize;
     Tetris.Block.position.x += x;
+    var debug = document.getElementById("debug");
+
+    switch(Tetris.Board.currentField){
+        case 0:
+            Tetris.Block.mesh.position.x = Tetris.Block.position.x * Tetris.blockSize - 45;
+            break;
+        case 1:
+            Tetris.Block.mesh.position.z = -Tetris.Block.position.x * Tetris.blockSize - 15;
+            break;
+        case 2:
+            Tetris.Block.mesh.position.x = -Tetris.Block.position.x * Tetris.blockSize + 45;
+            break;
+        case 3:
+            Tetris.Block.mesh.position.z = Tetris.Block.position.x * Tetris.blockSize - 105;
+            break;
+    }
 
     Tetris.Block.mesh.position.y -= y * Tetris.blockSize;
     Tetris.Block.position.y -= y;
+
+    debug.innerHTML = "x: " + Tetris.Block.position.x + "<br>y: " + Tetris.Block.position.y
+    + "<br>mesh.x: " + Tetris.Block.mesh.position.x + "<br>mesh.z: " + Tetris.Block.mesh.position.z
+    +"<br>face: " + Tetris.Board.currentField;
 
     var collision = Tetris.Board.testCollision((y != 0));
     if(collision === Tetris.Board.COLLISION.WALL) {
@@ -158,6 +177,32 @@ Tetris.Block.hitBottom = function() {
     Tetris.scene.remove(Tetris.Block.mesh);
     Tetris.Block.generate();
 };
+
+Tetris.Block.fieldOffset_x = function(x, f) {
+    switch(f){
+        case 0:
+            return -x - 1;
+        case 1:
+            return Tetris.boundingBoxConfig.width/2 + Tetris.boundingBoxConfig.depth;
+        case 2:
+            return x + 1;
+        case 3:
+            return -Tetris.boundingBoxConfig.width/2 - Tetris.boundingBoxConfig.depth;
+    }
+}
+
+Tetris.Block.fieldOffset_z = function(x, f) {
+    switch(f){
+        case 0:
+            return 0;
+        case 1:
+            return -x - Tetris.boundingBoxConfig.width/2 -1;
+        case 2:
+            return -Tetris.boundingBoxConfig.width - 2 * Tetris.boundingBoxConfig.depth;
+        case 3:
+            return -x - Tetris.boundingBoxConfig.width/2 -11;
+    }
+}
 
 Tetris.Block.petrify = function() {
     var shape = Tetris.Block.shape;
