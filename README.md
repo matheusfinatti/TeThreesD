@@ -1,4 +1,4 @@
 TeThreesD
 =========
 
-A 3D Tetris using _ _ _ _ _ _
+A 3D Tetris using THREE JS framework
